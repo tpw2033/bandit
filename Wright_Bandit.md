@@ -167,9 +167,15 @@ cat data.txt | tr 'a-zA-Z' 'n-za-mN-ZA-M'
 
 Password Found: wbWdlBxEir4CaE8LaPhauuOo6pwRmrDw
 
-Description: ...
+Description: This was by far the most complicated level to finish. First, I had
+to create a tmp directory to store the data.txt file. Then, I used xxd to create a hex dump of 
+data.txt, and used the file command to view what type of file it was. From there, it was a cycle of
+reading what file it was, and doing the correct unpacking, such as tar, gzip, and bzip2. I also had to sometimes
+modify the file extension for it to unpack. At the end, I got a text file, data8, that had the password
+for the next level.
 
 ```bash
+ssh bandit12@bandit.labs.overthewire.org -p2220
 mkdir /tmp/travis123
 cp data.txt /tmp/travis123
 cd /tmp/travis123
@@ -178,24 +184,25 @@ xxd -r data.txt > hexdump
 file hexdump
 mv hexdump hexdump.gz
 gzip -d hexdump
-xxd hexdump
+file hexdump
 mv hexdump hexdump.bz2
 bzip2 -d hexdump.bz2
+file hexdump
 mv hexdump hexdump.gz
 gzip -d hexdump.gz
-xxd hexdump
-xxd data5.bin
+file hexdump
+tar -xf hexdump
+file data5.bin
 tar -xf data5.bin
-mv data5.bin data5.tar
-tar -xf data5.tar
-xxd data6.bin
-bzip2 -d data6.bin
-xxd data6.bin.out
-mv data6.bin.out data6.tar
-tar -xf data6.tar
-xxd data8.bin | head
+file data6.bin
+mv data6.bin data6.bz2
+bzip2 -d data6.bz2
+file data6
+tar -xf data6
+file data8.bin
 mv data8.bin data8.gz
 gzip -d data8.gz
+file data8
 cat data8
 ```
 
